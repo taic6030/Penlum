@@ -1,0 +1,42 @@
+{
+  "name": "penlum",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "packageManager": "pnpm@11.19.0",
+  "scripts": {
+    "dev": "pnpm build:admin && wrangler dev --port 8787",
+    "build:admin": "node scripts/build-admin.mjs",
+    "build": "pnpm build:admin && wrangler deploy --dry-run --env=\"\" --outdir dist/worker",
+    "typecheck": "tsc --noEmit && tsc -p apps/admin/tsconfig.json",
+    "test": "vitest run",
+    "check": "pnpm typecheck && pnpm test && pnpm build",
+    "db:migrate": "wrangler d1 migrations apply penlum-local --local",
+    "seed": "tsx scripts/seed.ts",
+    "backup:restore": "tsx scripts/restore.ts",
+    "format": "prettier --write apps packages scripts tests docs *.json *.jsonc *.ts .github"
+  },
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^7.3.1",
+    "@toast-ui/editor": "^3.2.2",
+    "hono": "^4.9.7",
+    "marked": "^16.2.1",
+    "sanitize-html": "^2.17.0",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250906.0",
+    "@types/node": "^24.3.1",
+    "@types/sanitize-html": "^2.16.0",
+    "esbuild": "^0.25.9",
+    "miniflare": "^4.20250906.0",
+    "prettier": "3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.34.0"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "penlum",
+  "main": "apps/public-worker/src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "vars": { "ENVIRONMENT": "development", "ADMIN_HOST": "localhost", "GSC_CLIENT_ID": "" },
+  "assets": { "directory": "./dist/admin", "binding": "ADMIN_ASSETS", "run_worker_first": true },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "penlum-local",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "r2_buckets": [{ "binding": "MEDIA", "bucket_name": "penlum-media" }],
+  "queues": {
+    "producers": [{ "binding": "JOBS", "queue": "penlum-jobs" }],
+    "consumers": [
+      {
+        "queue": "penlum-jobs",
+        "max_batch_size": 5,
+        "max_retries": 3,
+        "dead_letter_queue": "penlum-dead-letter",
+      },
+    ],
+  },
+  "triggers": { "crons": ["*/5 * * * *", "15 6 * * *"] },
+  "observability": { "enabled": true },
+  "env": {
+    "production": {
+      "vars": {
+        "ENVIRONMENT": "production",
+        "ADMIN_HOST": "REPLACE_WITH_ADMIN_HOST",
+        "GSC_CLIENT_ID": "",
+      },
+      "workers_dev": false,
+    },
+  },
+}

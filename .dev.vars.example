@@ -1,0 +1,3 @@
+# Optional GSC OAuth credentials; never committed in .dev.vars.
+GSC_CLIENT_SECRET=
+GSC_REFRESH_TOKEN=
